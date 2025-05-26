@@ -31,10 +31,11 @@ jobs:
           pip install --upgrade pip wheel
           pip install buildozer cython==0.29.33
 
-      - name: Setup Android SDK
+      - name: Setup Android SDK and NDK
         run: |
-          # Create SDK directory
+          # Create directories
           mkdir -p ~/android-sdk
+          mkdir -p ~/.buildozer/android/platform
           
           # Install Command Line Tools
           cd ~/android-sdk
@@ -45,20 +46,26 @@ jobs:
           mkdir -p cmdline-tools
           mv latest cmdline-tools/
           
+          # Create expected directory structure
+          mkdir -p ~/.buildozer/android/platform/android-sdk/tools/bin
+          ln -s ~/android-sdk/cmdline-tools/latest/bin/sdkmanager ~/.buildozer/android/platform/android-sdk/tools/bin/sdkmanager
+          
           # Accept licenses
           yes | ~/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
           
-          # Install specific versions (using older stable versions)
-          ~/android-sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30"
+          # Install platform tools and build tools
+          ~/android-sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;30.0.3"
+          ~/android-sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-30"
           
-          # Create symlink for Buildozer
-          mkdir -p ~/.buildozer/android/platform/android-sdk
+          # Create symlinks for Buildozer
           ln -s ~/android-sdk/build-tools ~/.buildozer/android/platform/android-sdk/build-tools
           ln -s ~/android-sdk/platform-tools ~/.buildozer/android/platform/android-sdk/platform-tools
+          ln -s ~/android-sdk/cmdline-tools ~/.buildozer/android/platform/android-sdk/tools
 
       - name: Configure environment
         run: |
           echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
+          echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
           echo "PATH=$PATH:$HOME/android-sdk/platform-tools:$HOME/android-sdk/build-tools/30.0.3:$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_ENV
 
       - name: Create buildozer.spec
@@ -91,7 +98,7 @@ jobs:
           rm -rf .buildozer bin
           mkdir -p bin
           
-          # Run buildozer
+          # Run buildozer with full logging
           buildozer -v android debug > build.log 2>&1 || (cat build.log && exit 1)
           
           # Verify APK exists
