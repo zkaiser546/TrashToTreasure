@@ -45,8 +45,9 @@ jobs:
           mkdir -p cmdline-tools
           mv latest cmdline-tools/
 
-          yes | ~/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
-          ~/android-sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30"
+          yes | ~/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses || true
+          yes | ~/android-sdk/cmdline-tools/latest/bin/sdkmanager --update
+          yes | ~/android-sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;30.0.3" "platforms;android-30"
 
           chmod +x ~/android-sdk/build-tools/30.0.3/aidl
           ~/android-sdk/build-tools/30.0.3/aidl --version || true
