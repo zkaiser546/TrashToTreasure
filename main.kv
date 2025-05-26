@@ -1,0 +1,140 @@
+<MainScreen>:
+    name: 'main'
+
+    FloatLayout:
+        canvas.before:
+            Rectangle:
+                source: 'green_background.png'
+                pos: self.pos
+                size: self.size
+
+        Label:
+            text: f"Coins: {app.coins}"
+            font_size: '18sp'
+            color: 1, 1, 0, 1
+            bold: True
+            size_hint: None, None
+            size: dp(100), dp(30)
+            pos_hint: {'x': 0.02, 'top': 0.98}
+
+        # Grouped main content (logo, labels, and buttons)
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint: 0.9, None
+            height: self.minimum_height
+            pos_hint: {'center_x': 0.5, 'center_y': 0.50}
+            spacing: dp(10)
+
+            Image:
+                source: 'logo.png'
+                size_hint: None, None
+                size: dp(250), dp(200)
+                pos_hint: {'center_x': 0.5}
+
+
+
+            Label:
+                text: "GREENQUEST"
+                font_size: '32sp'
+                bold: True
+                color: 1, 1, 1, 1
+                halign: 'center'
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            Label:
+                text: "TRASH TO TREASURE\nCHALLENGE"
+                font_size: '18sp'
+                font_name: 'Georgia.ttf'
+                color: 1, 1, 1, 1
+                halign: 'center'
+                size_hint_y: None
+                height: self.texture_size[1]
+                text_size: self.width, None
+
+
+            Button:
+                text: "HUNT MODE"
+                size_hint_y: None
+                font_size: '18sp'
+                bold: True
+                height: dp(50)
+                background_normal: ''
+                background_color: 0, 0, 0, 0
+                on_press: app.root.current = 'hunt'
+                canvas.before:
+                    Color:
+                        rgba: 0.2, 0.8, 0.4, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [15]
+
+            Button:
+                text: "QUEST MODE"
+                size_hint_y: None
+                font_size: '18sp'
+                bold: True
+                height: dp(50)
+                background_normal: ''
+                background_color: 0, 0, 0, 0
+                on_press: app.root.current = 'quest'
+                canvas.before:
+                    Color:
+                        rgba: 0.2, 0.8, 0.4, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [15]
+
+            Button:
+                text: "TREE PLANTING"
+                size_hint_y: None
+                font_size: '18sp'
+                bold: True
+                height: dp(50)
+                background_normal: ''
+                background_color: 0, 0, 0, 0
+                on_press: app.root.current = 'tree'
+                canvas.before:
+                    Color:
+                        rgba: 0.2, 0.8, 0.4, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [15]
+
+            Button:
+                text: "SHOP"
+                size_hint_y: None
+                font_size: '18sp'
+                bold: True
+                height: dp(50)
+                background_normal: ''
+                background_color: 0, 0, 0, 0
+                on_press: app.root.current = 'shop'
+                canvas.before:
+                    Color:
+                        rgba: 0.2, 0.8, 0.4, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [15]
+
+            Button:
+                text: "EXIT"
+                size_hint_y: None
+                font_size: '18sp'
+                bold: True
+                height: dp(50)
+                pos_hint: {'center_x': 0.5, 'y': 0.06}
+                background_normal: ''
+                background_color: 0, 0, 0, 0
+                on_press: app.stop()
+                canvas.before:
+                    Color:
+                        rgba: 0.8, 0.2, 0.2, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [15]

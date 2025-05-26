@@ -1,0 +1,142 @@
+<TreePlantingScreen>:
+    name: 'tree'
+
+    FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                source: 'green_background.png'
+                pos: self.pos
+                size: self.size
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(10)
+        padding: dp(10)
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(10)
+            padding: dp(5)
+
+            Button:
+                text: "BACK"
+                size_hint: None, None
+                size: dp(85), dp(30)
+                background_normal: ''
+                background_color: 0, 0, 0, 0
+                font_size: '16sp'
+                bold: True
+                on_press: app.root.current = 'main'
+                canvas.before:
+                    Color:
+                        rgba: 0.2, 0.8, 0.4, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [15]
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: dp(300)
+            width: dp(200)
+            padding: dp(8)
+            spacing: dp(8)
+
+            Image:
+                id: tree_img
+                source: root.tree_image
+                size_hint_x: 0.5
+                allow_stretch: True
+                keep_ratio: True
+
+        Label:
+            text: "Tree Planting Mode"
+            font_size: '24sp'
+            color: 1, 1, 1, 1
+            bold: True
+            font_name: 'Georgia.ttf'
+            size_hint_y: None
+            height: dp(40)
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: dp(20)
+            spacing: dp(5)
+
+            Label:
+                text: f"Coins: {root.coins}"
+                font_size: '18sp'
+                color: 1, 1, 0, 1
+                bold: True
+
+            Label:
+                text: f"Score: {root.score}"
+                font_size: '18sp'
+                color: 1, 1, 1, 1
+                bold: True
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: dp(50)
+            spacing: dp(5)
+
+            Label:
+                text: f"Tree: {root.tree_type} - {root.status}"
+                font_size: '18sp'
+                color: 1, 1, 1, 1
+                bold: True
+
+        Label:
+            text: f"Trees Planted: {root.trees_planted}"
+            font_size: '18sp'
+            color: 1, 1, 1, 1
+            bold: True
+            size_hint_y: None
+            height: dp(20)
+
+        Button:
+            text: "Plant a Tree (50 Coins)"
+            size_hint_y: None
+            height: dp(30)
+            background_normal: ''
+            background_color: 0, 0, 0, 0
+            font_size: '16sp'
+            bold: True
+            on_press: root.plant_tree()
+            canvas.before:
+                Color:
+                    rgba: 0.2, 0.8, 0.4, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [15]
+
+        Button:
+            text: "Switch Tree"
+            size_hint_y: None
+            height: dp(30)
+            background_normal: ''
+            background_color: 0, 0, 0, 0
+            font_size: '16sp'
+            bold: True
+            on_press: root.switch_tree()
+            canvas.before:
+                Color:
+                    rgba: 0.2, 0.8, 0.4, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [15]
+
+        Label:
+            text: root.feedback_message
+            font_size: '16sp'
+            color: 1, 0.4, 0, 1
+            bold: True
+            size_hint_y: None
+            height: dp(25)

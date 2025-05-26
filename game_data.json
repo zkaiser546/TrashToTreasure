@@ -1,0 +1,1 @@
+{"coins": 50, "hunt_score": 0, "level": 1, "purchased_trees": {"Acacia": true, "Oak": false, "Pine": false}, "tree_states": {"Acacia": {"stage": 0, "image": "acacia_seedling.png"}}, "tree_type": "Acacia", "can_plant": true, "trees_planted": 0}

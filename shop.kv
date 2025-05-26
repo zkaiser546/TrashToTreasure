@@ -1,0 +1,176 @@
+<ShopScreen>:
+    name: 'shop'
+
+    FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                source: 'green_background.png'
+                pos: self.pos
+                size: self.size
+
+        # Overlay UI on top of background
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: dp(10)
+            padding: dp(10)
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 0  # Transparent to let background show
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            BoxLayout:
+                size_hint_y: None
+                height: dp(40)
+                padding: dp(10), 0
+
+                Button:
+                    text: "BACK"
+                    size_hint: None, None
+                    size: dp(100), dp(40)
+                    background_normal: ''
+                    background_color: 0, 0, 0, 0
+                    font_size: '16sp'
+                    bold: True
+                    on_press: app.root.current = 'main'
+                    canvas.before:
+                        Color:
+                            rgba: 0.2, 0.8, 0.4, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [15]
+
+            Label:
+                text: "Shop"
+                font_size: '32sp'
+                font_name: 'Georgia.ttf'
+                color: 1, 1, 1, 1
+                bold: True
+                size_hint_y: None
+                height: dp(40)
+
+            Label:
+                text: f"Coins: {root.coins}"
+                font_size: '18sp'
+                color: 1, 1, 0, 1
+                bold: True
+                size_hint_y: None
+                height: dp(30)
+
+            Label:
+                text: root.feedback_message
+                font_size: '16sp'
+                color: 1, 0.8, 0.2, 1
+                size_hint_y: None
+                height: dp(30)
+
+            ScrollView:
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint_y: None
+                    height: self.minimum_height
+                    spacing: dp(10)
+
+                    # Oak Tree Item
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        size_hint_y: None
+                        height: dp(120)
+                        padding: dp(10)
+                        spacing: dp(10)
+                        canvas.before:
+                            Color:
+                                rgba: 0.2, 0.2, 0.2, 0.8  # Semi-transparent background
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [10]
+
+                        Image:
+                            source: 'oak_tree.png'
+                            size_hint_x: 0.3
+                            allow_stretch: True
+                            keep_ratio: True
+
+                        BoxLayout:
+                            orientation: 'vertical'
+                            spacing: dp(5)
+
+                            Label:
+                                text: "Oak Tree"
+                                font_size: '16sp'
+                                color: 1, 1, 1, 1
+
+                            Label:
+                                text: "Price: 100 Coins"
+                                font_size: '14sp'
+                                color: 1, 1, 1, 1
+
+                            Label:
+                                text: "Sold Out!" if root.purchased_trees["Oak"] else ""
+                                font_size: '14sp'
+                                color: 1, 0, 0, 1
+
+                            Button:
+                                text: "Buy"
+                                size_hint_y: None
+                                height: dp(40)
+                                background_normal: ''
+                                background_color: 0.2, 0.8, 0.4, 1
+                                font_size: '14sp'
+                                bold: True
+                                on_press: root.buy_tree("Oak")
+
+                    # Pine Tree Item
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        size_hint_y: None
+                        height: dp(120)
+                        padding: dp(10)
+                        spacing: dp(10)
+                        canvas.before:
+                            Color:
+                                rgba: 0.2, 0.2, 0.2, 0.8
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [10]
+
+                        Image:
+                            source: 'pine_tree.png'
+                            size_hint_x: 0.3
+                            allow_stretch: True
+                            keep_ratio: True
+
+                        BoxLayout:
+                            orientation: 'vertical'
+                            spacing: dp(5)
+
+                            Label:
+                                text: "Pine Tree"
+                                font_size: '16sp'
+                                color: 1, 1, 1, 1
+
+                            Label:
+                                text: "Price: 150 Coins"
+                                font_size: '14sp'
+                                color: 1, 1, 1, 1
+
+                            Label:
+                                text: "Sold Out!" if root.purchased_trees["Pine"] else ""
+                                font_size: '14sp'
+                                color: 1, 0, 0, 1
+
+                            Button:
+                                text: "Buy"
+                                size_hint_y: None
+                                height: dp(40)
+                                background_normal: ''
+                                background_color: 0.2, 0.8, 0.4, 1
+                                font_size: '14sp'
+                                bold: True
+                                on_press: root.buy_tree("Pine")

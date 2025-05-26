@@ -1,0 +1,213 @@
+<HuntGameScreen>:
+    name: 'hunt'
+    hunt_image: hunt_image
+    score_label: score_label
+    feedback_label: feedback_label
+
+    FloatLayout:
+        canvas.before:
+            Rectangle:
+                source: 'green_background.png'
+                pos: self.pos
+                size: self.size
+
+    BoxLayout:
+        orientation: 'vertical'
+        spacing: dp(10)
+        padding: dp(10)
+
+        BoxLayout:
+            size_hint_y: None
+            height: dp(40)
+            padding: dp(10), 0
+
+            Button:
+                text: "BACK"
+                size_hint: None, None
+                size: dp(100), dp(40)
+                background_normal: ''
+                background_color: 0, 0, 0, 0
+                font_size: '16sp'
+                bold: True
+                on_press:
+                    root.stop_camera()
+                    app.root.current = 'main'
+                canvas.before:
+                    Color:
+                        rgba: 0.2, 0.8, 0.4, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [15]
+
+        Label:
+            id: score_label
+            text: f'Score: {root.score}'
+            font_size: '20sp'
+            color: 1, 1, 1, 1
+            bold: True
+            size_hint_y: None
+            height: dp(30)
+
+        Image:
+            id: hunt_image
+            source: 'placeholder.jpg'
+            size_hint_y: None
+            height: dp(200)
+            keep_ratio: True
+            allow_stretch: True
+
+        Label:
+            id: detected_text
+            text: root.detected_text
+            font_size: '16sp'
+            color: 1, 1, 1, 1
+            halign: 'center'
+            size_hint_y: None
+            height: dp(30)
+
+        Label:
+            text: "What kind of trash is this?"
+            font_size: '18sp'
+            color: 1, 1, 1, 1
+            size_hint_y: None
+            height: dp(30)
+
+        BoxLayout:
+            id: classification_container
+            orientation: 'vertical'
+            spacing: dp(5)
+            size_hint_y: None
+            height: self.minimum_height
+
+            BoxLayout:
+                size_hint_y: None
+                height: dp(40)
+                spacing: dp(10)
+                padding: dp(5)
+                canvas.before:
+                    Color:
+                        rgba: 0.2, 0.2, 0.2, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [8]
+                Label:
+                    text: "Recyclable"
+                    font_size: '16sp'
+                    color: 1, 1, 1, 1
+                    size_hint_x: 0.8
+                CheckBox:
+                    group: 'classification'
+                    size_hint_x: 0.2
+                    category: "recyclable"
+
+            BoxLayout:
+                size_hint_y: None
+                height: dp(40)
+                spacing: dp(10)
+                padding: dp(5)
+                canvas.before:
+                    Color:
+                        rgba: 0.2, 0.2, 0.2, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [8]
+                Label:
+                    text: "Non-Recyclable"
+                    font_size: '16sp'
+                    color: 1, 1, 1, 1
+                    size_hint_x: 0.8
+                CheckBox:
+                    group: 'classification'
+                    size_hint_x: 0.2
+                    category: "non-recyclable"
+
+            BoxLayout:
+                size_hint_y: None
+                height: dp(40)
+                spacing: dp(10)
+                padding: dp(5)
+                canvas.before:
+                    Color:
+                        rgba: 0.2, 0.2, 0.2, 1
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [8]
+                Label:
+                    text: "Biodegradable"
+                    font_size: '16sp'
+                    color: 1, 1, 1, 1
+                    size_hint_x: 0.8
+                CheckBox:
+                    group: 'classification'
+                    size_hint_x: 0.2
+                    category: "biodegradable"
+
+            BoxLayout:
+                size_hint_y: None
+                height: dp(50)
+                spacing: dp(5)
+                padding: dp(5)
+
+                Button:
+                    text: "START"
+                    size_hint_x: None
+                    width: dp(100)
+                    font_size: '16sp'
+                    bold: True
+                    background_normal: ''
+                    background_color: 0, 0, 0, 0
+                    on_press: root.start_camera()
+                    canvas.before:
+                        Color:
+                            rgba: 0.2, 0.8, 0.4, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [10]
+
+                Button:
+                    text: "SWITCH CAM"
+                    size_hint_x: None
+                    width: dp(120)
+                    font_size: '16sp'
+                    bold: True
+                    background_normal: ''
+                    background_color: 0, 0, 0, 0
+                    on_press: root.switch_camera()
+                    canvas.before:
+                        Color:
+                            rgba: 0.2, 0.8, 0.4, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [10]
+
+                Button:
+                    text: "CHECK"
+                    size_hint_x: None
+                    width: dp(100)
+                    font_size: '16sp'
+                    bold: True
+                    background_normal: ''
+                    background_color: 0, 0, 0, 0
+                    on_press: root.check_answer()
+                    canvas.before:
+                        Color:
+                            rgba: 0.2, 0.8, 0.4, 1
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [10]
+
+        Label:
+            id: feedback_label
+            text: root.user_feedback
+            font_size: '24sp'
+            color: root.feedback_color
+            halign: 'center'
+            size_hint_y: None
+            height: dp(40)

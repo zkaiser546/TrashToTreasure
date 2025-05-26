@@ -1,0 +1,225 @@
+<QuestModeScreen>:
+    name: 'quest'
+    hunt_image: hunt_image
+    timer_label: timer_label
+    feedback_label: feedback_label
+    level_label: level_label
+    target_label: target_label
+    progress_label: progress_label
+
+    FloatLayout:
+        canvas.before:
+            Rectangle:
+                source: 'green_background.png'
+                pos: self.pos
+                size: self.size
+
+        BoxLayout:
+            orientation: 'vertical'
+            spacing: dp(5)
+            padding: dp(5)
+            size_hint: 1, 1
+
+            # Top Bar - Back Button + Timer + Coins
+            BoxLayout:
+                size_hint_y: None
+                height: dp(40)
+                spacing: dp(5)
+                padding: dp(5)
+
+                Button:
+                    text: "BACK"
+                    size_hint_x: None
+                    width: dp(80)
+                    font_size: '14sp'
+                    bold: True
+                    background_normal: ''
+                    background_color: 0.2, 0.8, 0.4, 1
+                    on_press: app.root.current = 'main'
+
+                Label:
+                    id: timer_label
+                    text: "01:00"
+                    font_size: '16sp'
+                    color: 1, 1, 1, 1
+                    halign: 'center'
+                    bold: True
+
+                Label:
+                    text: f"Coins: {root.coins}"
+                    font_size: '16sp'
+                    color: 1, 1, 0, 1
+                    bold: True
+                    size_hint_x: 0.4
+
+            # Level Info
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_y: None
+                height: dp(60)
+                spacing: dp(2)
+                padding: dp(2)
+
+                Label:
+                    id: level_label
+                    text: "Level 1: Find bottle"
+                    font_size: '14sp'
+                    color: 1, 1, 1, 1
+                    halign: 'center'
+                    bold: True
+
+                Label:
+                    id: target_label
+                    text: "Current: None"
+                    font_size: '14sp'
+                    color: 1, 1, 1, 1
+                    halign: 'center'
+
+                Label:
+                    id: progress_label
+                    text: "Progress: 0/0"
+                    font_size: '14sp'
+                    color: 1, 1, 1, 1
+                    halign: 'center'
+
+            # Camera View
+            Image:
+                id: hunt_image
+                source: 'placeholder.jpg'
+                size_hint_y: None
+                height: dp(250)
+                keep_ratio: True
+                allow_stretch: True
+
+            # Detection Status
+            Label:
+                id: detected_text
+                text: root.detected_text
+                font_size: '14sp'
+                color: 1, 1, 1, 1
+                halign: 'center'
+                size_hint_y: None
+                height: dp(25)
+
+            # Classification Options
+            Label:
+                text: "What kind of trash is this?"
+                font_size: '14sp'
+                color: 1, 1, 1, 1
+                halign: 'center'
+                size_hint_y: None
+                height: dp(25)
+
+            BoxLayout:
+                id: classification_container
+                orientation: 'vertical'
+                spacing: dp(5)
+                size_hint_y: None
+                height: dp(120)
+
+                BoxLayout:
+                    size_hint_y: None
+                    height: dp(40)
+                    spacing: dp(5)
+                    padding: dp(5)
+                    canvas.before:
+                        Color:
+                            rgba: 0.2, 0.2, 0.2, 0.6
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [8]
+                    Label:
+                        text: "Recyclable"
+                        font_size: '14sp'
+                        color: 1, 1, 1, 1
+                    CheckBox:
+                        group: 'classification'
+                        size_hint_x: None
+                        width: dp(40)
+                        category: "recyclable"
+
+                BoxLayout:
+                    size_hint_y: None
+                    height: dp(40)
+                    spacing: dp(5)
+                    padding: dp(5)
+                    canvas.before:
+                        Color:
+                            rgba: 0.2, 0.2, 0.2, 0.6
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [8]
+                    Label:
+                        text: "Non-Recyclable"
+                        font_size: '14sp'
+                        color: 1, 1, 1, 1
+                    CheckBox:
+                        group: 'classification'
+                        size_hint_x: None
+                        width: dp(40)
+                        category: "non-recyclable"
+
+                BoxLayout:
+                    size_hint_y: None
+                    height: dp(40)
+                    spacing: dp(5)
+                    padding: dp(5)
+                    canvas.before:
+                        Color:
+                            rgba: 0.2, 0.2, 0.2, 0.6
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [8]
+                    Label:
+                        text: "Biodegradable"
+                        font_size: '14sp'
+                        color: 1, 1, 1, 1
+                    CheckBox:
+                        group: 'classification'
+                        size_hint_x: None
+                        width: dp(40)
+                        category: "biodegradable"
+
+            # Action Buttons
+            BoxLayout:
+                size_hint_y: None
+                height: dp(50)
+                spacing: dp(5)
+                padding: dp(5)
+
+                Button:
+                    text: "START"
+                    font_size: '14sp'
+                    bold: True
+                    background_normal: ''
+                    background_color: 0.2, 0.8, 0.4, 1
+                    on_press: root.start_camera()
+
+                Button:
+                    text: "SWITCH CAM"
+                    font_size: '14sp'
+                    bold: True
+                    background_normal: ''
+                    background_color: 0.2, 0.8, 0.4, 1
+                    on_press: root.switch_camera()
+
+                Button:
+                    text: "CHECK"
+                    font_size: '14sp'
+                    bold: True
+                    background_normal: ''
+                    background_color: 0.2, 0.8, 0.4, 1
+                    on_press: root.check_answer()
+
+            # Feedback Label
+            Label:
+                id: feedback_label
+                text: root.user_feedback
+                font_size: '16sp'
+                color: root.feedback_color
+                halign: 'center'
+                size_hint_y: None
+                height: dp(30)
