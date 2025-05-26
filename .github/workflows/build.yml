@@ -1,0 +1,75 @@
+name: Android APK Builder
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            git zip unzip python3-pip python3-venv \
+            openjdk-17-jdk autoconf libtool pkg-config \
+            zlib1g-dev libncurses5-dev cython3
+
+      - name: Install Buildozer
+        run: |
+          pip install --upgrade pip wheel
+          pip install buildozer cython==0.29.33
+
+      - name: Install Android SDK components
+        run: |
+          mkdir -p ~/.android
+          touch ~/.android/repositories.cfg
+          
+          # Install Command Line Tools
+          mkdir -p ~/android-sdk
+          cd ~/android-sdk
+          wget https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip
+          unzip commandlinetools-linux-*.zip
+          rm commandlinetools-linux-*.zip
+          mv cmdline-tools latest
+          mkdir -p cmdline-tools
+          mv latest cmdline-tools/
+          
+          # Accept licenses and install components
+          yes | ~/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+          ~/android-sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;34.0.0"
+          ~/android-sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-34"
+          
+          # Verify aidl exists
+          ls -la ~/android-sdk/build-tools/34.0.0/aidl
+
+      - name: Configure environment
+        run: |
+          echo "ANDROID_SDK_ROOT=$HOME/android-sdk" >> $GITHUB_ENV
+          echo "PATH=$PATH:$HOME/android-sdk/platform-tools:$HOME/android-sdk/build-tools/34.0.0:$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_ENV
+
+      - name: Build APK
+        run: |
+          buildozer init
+          echo "[buildozer]
+          android.sdk_path = $HOME/android-sdk
+          android.accept_sdk_license = True" >> buildozer.spec
+          
+          buildozer -v android debug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-app
+          path: bin/*.apk
