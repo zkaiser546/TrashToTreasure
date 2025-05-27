@@ -35,7 +35,6 @@ jobs:
         run: |
           # Create directories
           mkdir -p ~/android-sdk
-          mkdir -p ~/.buildozer/android/platform/android-sdk/tools
           
           # Install Command Line Tools
           cd ~/android-sdk
@@ -46,18 +45,14 @@ jobs:
           mkdir -p cmdline-tools
           mv latest cmdline-tools/
           
-          # Create legacy tools directory structure that Buildozer expects
-          ln -s ~/android-sdk/cmdline-tools/latest/bin ~/.buildozer/android/platform/android-sdk/tools/bin
-          
           # Accept licenses
           yes | ~/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
           
           # Install platform tools and build tools
           ~/android-sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;34.0.0" "platforms;android-34"
           
-          # Install NDK
+          # Install NDK (version that works with Buildozer)
           ~/android-sdk/cmdline-tools/latest/bin/sdkmanager "ndk;25.1.8937393"
-          ln -s ~/android-sdk/ndk/25.1.8937393 ~/.buildozer/android/platform/android-ndk-r25b
           
           # Verify installations
           ~/android-sdk/cmdline-tools/latest/bin/sdkmanager --list
@@ -93,6 +88,8 @@ jobs:
           android.build_tools_version = 34.0.0
           android.api = 34
           android.minapi = 21
+          android.skip_sdk_download = True  # Critical - prevents Buildozer from managing SDK
+          android.skip_ndk_download = True  # Critical - prevents Buildozer from managing NDK
           EOL
 
       - name: Build APK
@@ -100,6 +97,10 @@ jobs:
           # Clean previous builds
           rm -rf .buildozer bin
           mkdir -p bin
+          
+          # Force Buildozer to use our SDK/NDK
+          export BUILDOZER_SKIP_SDK_DOWNLOAD=1
+          export BUILDOZER_SKIP_NDK_DOWNLOAD=1
           
           # Run buildozer with full logging
           buildozer -v android debug > build.log 2>&1 || (cat build.log && exit 1)
