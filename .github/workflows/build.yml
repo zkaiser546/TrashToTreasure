@@ -45,19 +45,27 @@ jobs:
           mkdir -p cmdline-tools
           mv latest cmdline-tools/
           
-          # Accept all licenses first
+          # Accept all licenses non-interactively
           yes | ~/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
           
-          # Install specific components (using build-tools 34.0.0)
+          # Install specific components (using build-tools 34.0.0 instead of 36)
           ~/android-sdk/cmdline-tools/latest/bin/sdkmanager "platform-tools" "build-tools;34.0.0"
           ~/android-sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-34"
           
           # Install NDK version that works with Buildozer
           ~/android-sdk/cmdline-tools/latest/bin/sdkmanager "ndk;25.1.8937393"
           
-          # Verify AIDL exists and is executable
+          # MANUAL AIDL FIX - Verify and make executable
           chmod +x ~/android-sdk/build-tools/34.0.0/aidl
-          ~/android-sdk/build-tools/34.0.0/aidl --version || true
+          if [ -f ~/android-sdk/build-tools/34.0.0/aidl ]; then
+            echo "AIDL found and made executable"
+            ~/android-sdk/build-tools/34.0.0/aidl --version || echo "AIDL version check failed but continuing"
+          else
+            echo "ERROR: AIDL not found at expected path!"
+            echo "Contents of build-tools directory:"
+            ls -la ~/android-sdk/build-tools/34.0.0/
+            exit 1
+          fi
 
       - name: Configure Environment
         run: |
@@ -66,7 +74,7 @@ jobs:
           echo "ANDROID_NDK_HOME=$HOME/android-sdk/ndk/25.1.8937393" >> $GITHUB_ENV
           echo "PATH=$PATH:$HOME/android-sdk/platform-tools:$HOME/android-sdk/build-tools/34.0.0:$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_ENV
 
-      - name: Create buildozer.spec
+      - name: Create buildozer.spec with AIDL config
         run: |
           cat > buildozer.spec << EOL
           [app]
@@ -85,30 +93,33 @@ jobs:
           android.sdk_path = $HOME/android-sdk
           android.ndk_path = $HOME/android-sdk/ndk/25.1.8937393
           android.accept_sdk_license = True
-          android.arch = armeabi-v7a  # More compatible than arm64
+          android.arch = armeabi-v7a
           android.build_tools_version = 34.0.0
           android.api = 34
           android.minapi = 21
+          android.aidl = $HOME/android-sdk/build-tools/34.0.0/aidl  # EXPLICIT AIDL PATH
           android.skip_sdk_download = True
           android.skip_ndk_download = True
           EOL
 
-      - name: Build APK
+      - name: Build APK with AIDL verification
         run: |
           # Clean previous builds
           rm -rf .buildozer bin
           mkdir -p bin
           
-          # Force use of our SDK/NDK
-          export BUILDOZER_SKIP_SDK_DOWNLOAD=1
-          export BUILDOZER_SKIP_NDK_DOWNLOAD=1
+          # Verify AIDL is accessible
+          if [ ! -f $HOME/android-sdk/build-tools/34.0.0/aidl ]; then
+            echo "CRITICAL ERROR: AIDL still missing after installation!"
+            exit 1
+          fi
           
-          # Run buildozer with full logging
+          # Build with debug logging
           buildozer -v android debug > build.log 2>&1 || (cat build.log && exit 1)
           
           # Verify APK exists
           if [ ! -f bin/*.apk ]; then
-            echo "APK not found! Build failed."
+            echo "APK not found! Full build log:"
             cat build.log
             exit 1
           fi
